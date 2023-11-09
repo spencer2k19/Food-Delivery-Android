@@ -13,9 +13,14 @@
         android:theme="@style/Theme.FoodDelivery"
         tools:targetApi="31">
         <activity
-            android:theme="@style/SplashTheme"
+            android:name=".presentation.home.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.FoodDelivery" />
+        <activity
             android:name=".presentation.intro.IntroActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,9 +31,7 @@
             android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.FoodDelivery">
-
-        </activity>
+            android:theme="@style/Theme.FoodDelivery" />
     </application>
 
 </manifest>

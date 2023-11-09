@@ -1,5 +1,7 @@
 package com.example.fooddelivery.presentation.login
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Resources.Theme
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -33,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +48,7 @@ import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.components.CustomFilledButton
 import com.example.fooddelivery.presentation.components.CustomOutlinedTextField
+import com.example.fooddelivery.presentation.home.HomeActivity
 import com.example.fooddelivery.presentation.main.ForgotPassword
 import com.example.fooddelivery.presentation.main.Register
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
@@ -55,6 +59,8 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 fun LoginView(
     navController: NavController? = null
 ) {
+    val activity = (LocalContext.current as? Activity)
+
     Scaffold(containerColor = Color.White) { _ ->
         var email by remember {  mutableStateOf("")}
         var password by remember{ mutableStateOf("") }
@@ -153,7 +159,8 @@ fun LoginView(
             Spacer(modifier = Modifier.height(20.dp))
 
             CustomFilledButton(text = "SIGN IN", onClick = {
-
+                activity?.startActivity(Intent(activity,HomeActivity::class.java))
+                activity?.finish()
             })
 
             Spacer(modifier = Modifier.height(10.dp))
