@@ -70,7 +70,7 @@ fun NotificationsView(
 
         Column(modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 60.dp, start = 20.dp, end = 20.dp, bottom = 100.dp)) {
+            .padding(top = 60.dp, start = 20.dp, end = 20.dp)) {
 
 
             Spacer(modifier = Modifier.height(20.dp))

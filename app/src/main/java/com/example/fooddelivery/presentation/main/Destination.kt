@@ -89,4 +89,13 @@ object RestaurantPage : Destination {
         set(value) {}
 }
 
+object OrderDetails : Destination {
+    override var route: String
+        get() = "order-details"
+        set(value) {}
+}
+
+
+
+
 

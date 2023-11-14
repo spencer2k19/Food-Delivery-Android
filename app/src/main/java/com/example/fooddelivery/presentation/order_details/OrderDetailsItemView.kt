@@ -1,5 +1,4 @@
-package com.example.fooddelivery.presentation.orders
-
+package com.example.fooddelivery.presentation.order_details
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,18 +32,15 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderItemView(
-    onClick: () -> Unit = {}
+fun OrderDetailsItemView(
+
 ) {
     Card(colors = CardDefaults.cardColors(
         containerColor = Color.White
     ), elevation = CardDefaults.cardElevation(
         defaultElevation = 5.dp
     ), shape = RoundedCornerShape(16.dp),
-        onClick = {
-            onClick()
-        }
-        ,modifier = Modifier
+        modifier = Modifier
             .padding(bottom = 15.dp)
             .fillMaxWidth()
             .height(82.dp)
@@ -52,14 +48,14 @@ fun OrderItemView(
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)) {
-            Image(painter = painterResource(id = R.drawable.subway), contentDescription = "",
+            Image(painter = painterResource(id = R.drawable.noodle), contentDescription = "",
                 modifier = Modifier
                     .width(60.dp)
                     .height(60.dp))
             Spacer(modifier = Modifier.width(20.dp))
             Column(horizontalAlignment = Alignment.Start) {
                 Text(
-                    text = "Mcdonald's",
+                    text = "Noodle",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = Satoshi,
@@ -68,22 +64,11 @@ fun OrderItemView(
 
                         )
                 )
-                Spacer(modifier = Modifier.height(5.dp))
 
-                Text(
-                    text = "21:30",
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontFamily = Satoshi,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF181E22),
-
-                        )
-                )
 
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "$ 45.50",
+                    text = "$ 10",
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = Satoshi,
@@ -96,19 +81,7 @@ fun OrderItemView(
 
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-            Box(modifier = Modifier.width(72.dp).height(24.dp).background(GreenColor, shape = RoundedCornerShape(16.dp))) {
-                Text(
-                    text = "Process",
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontFamily = Satoshi,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFFFFFFF),
-                        ),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+
         }
     }
 }
@@ -116,6 +89,6 @@ fun OrderItemView(
 
 @Preview
 @Composable
-fun PrevOrderItemView() {
-    OrderItemView()
+fun PrevOrderDetailsItemView() {
+    OrderDetailsItemView()
 }

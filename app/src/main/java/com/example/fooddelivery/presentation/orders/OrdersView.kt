@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.presentation.main.OrderDetails
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,7 +105,9 @@ fun OrdersView(
 
             LazyColumn(contentPadding = PaddingValues(bottom = 100.dp)) {
                 items(3) {
-                    OrderItemView()
+                    OrderItemView(onClick = {
+                        navController?.navigate(OrderDetails.route)
+                    })
                 }
             }
         }
