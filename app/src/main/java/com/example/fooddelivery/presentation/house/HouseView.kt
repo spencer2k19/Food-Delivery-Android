@@ -1,6 +1,7 @@
 package com.example.fooddelivery.presentation.house
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +45,7 @@ import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.house.components.CategoryItemView
 import com.example.fooddelivery.presentation.house.components.FoodItemView
 import com.example.fooddelivery.presentation.house.components.RestaurantItemView
+import com.example.fooddelivery.presentation.main.NotificationsDestination
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +59,7 @@ fun HouseView(
 
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 100.dp)
+                .padding(top = 20.dp)
 
             ) {
 
@@ -89,8 +91,12 @@ fun HouseView(
 
                     Spacer(modifier = Modifier.width(10.dp))
                   Box(modifier = Modifier
+                      .clickable {
+                          navController?.navigate(NotificationsDestination.route)
+                      }
                       .width(54.dp)
                       .height(54.dp)
+
                       .background(color = Color(0xFFF9F9F9), shape = CircleShape)) {
                       Icon(painter = painterResource(id = R.drawable.notification), contentDescription = "",
                           modifier = Modifier.align(Alignment.Center))
@@ -147,6 +153,8 @@ fun HouseView(
                             RestaurantItemView()
                         }
                     }
+                    
+                    Spacer(modifier = Modifier.height(100.dp))
 
 
 

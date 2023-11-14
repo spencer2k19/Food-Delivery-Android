@@ -76,7 +76,7 @@ object Home : Destination {
 
 }
 
-object Notifications : Destination {
+object NotificationsDestination : Destination {
     override var route: String
         get() = "notifications"
         set(value) {}

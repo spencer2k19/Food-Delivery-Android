@@ -1,7 +1,5 @@
-package com.example.fooddelivery.presentation.orders
+package com.example.fooddelivery.presentation.notifications
 
-import android.widget.Space
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,6 +16,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,51 +26,52 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.presentation.components.BackButton
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrdersView(
+fun NotificationsView(
     navController: NavController? = null
 ) {
-    Scaffold(containerColor = Color.White) { _ ->
-        var query by remember{ mutableStateOf("") }
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                BackButton {
+                    navController?.popBackStack()
+                }
+
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(text = "Notifications", fontSize = 20.sp,
+                    fontWeight = FontWeight.W700, fontFamily = Satoshi
+                )
+            }
+
+        },
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = Color.White
+            )
+
+        )
+    }, containerColor = Color.White) { _ ->
+
+        var query by remember {
+            mutableStateOf("")
+        }
 
 
 
         Column(modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)) {
-            Spacer(modifier = Modifier.height(20.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(painter = painterResource(id = R.drawable.food_logo), contentDescription = "",
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp), contentScale = ContentScale.FillBounds)
+            .padding(top = 60.dp, start = 20.dp, end = 20.dp, bottom = 100.dp)) {
 
-                Spacer(modifier = Modifier.width(20.dp))
-                Text(
-                    text = "Ordder History",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        fontFamily = Satoshi,
-                        fontWeight = FontWeight(700),
-                        color = Color(0xFF181E22),
-
-                        )
-                )
-
-
-            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -100,13 +100,15 @@ fun OrdersView(
                 }
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            LazyColumn(contentPadding = PaddingValues(bottom = 100.dp)) {
-                items(3) {
-                    OrderItemView()
+            LazyColumn(contentPadding = PaddingValues(bottom = 60.dp, top = 10.dp)) {
+                items(6) {
+                    NotificationItemView()
                 }
             }
+
+
         }
     }
 }
@@ -114,6 +116,6 @@ fun OrdersView(
 
 @Preview
 @Composable
-fun PrevOrdersView() {
-    OrdersView()
+fun PrevNotificationsView() {
+    NotificationsView()
 }

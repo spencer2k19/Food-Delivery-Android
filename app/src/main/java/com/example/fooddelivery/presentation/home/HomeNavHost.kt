@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.fooddelivery.presentation.chat.ChatView
 import com.example.fooddelivery.presentation.house.HouseView
+import com.example.fooddelivery.presentation.main.NotificationsDestination
+import com.example.fooddelivery.presentation.notifications.NotificationsView
 import com.example.fooddelivery.presentation.orders.OrdersView
 import com.example.fooddelivery.presentation.profile.ProfileView
 
@@ -30,6 +32,10 @@ fun HomeNavHost(
 
         composable(BottomNavItem.Chat.screenRoute) {
             ChatView(navController)
+        }
+
+        composable(NotificationsDestination.route) {
+            NotificationsView(navController)
         }
     }
 }
