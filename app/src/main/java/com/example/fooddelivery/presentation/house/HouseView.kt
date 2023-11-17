@@ -46,6 +46,7 @@ import com.example.fooddelivery.presentation.house.components.CategoryItemView
 import com.example.fooddelivery.presentation.house.components.FoodItemView
 import com.example.fooddelivery.presentation.house.components.RestaurantItemView
 import com.example.fooddelivery.presentation.main.NotificationsDestination
+import com.example.fooddelivery.presentation.main.RestaurantPage
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,7 +151,9 @@ fun HouseView(
 
                     LazyRow(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
                         items(3) {
-                            RestaurantItemView()
+                            RestaurantItemView(onClick = {
+                                navController?.navigate(RestaurantPage.route)
+                            })
                         }
                     }
                     

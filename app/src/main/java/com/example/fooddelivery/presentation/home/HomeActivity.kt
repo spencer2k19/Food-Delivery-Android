@@ -3,6 +3,7 @@ package com.example.fooddelivery.presentation.home
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -19,9 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fooddelivery.presentation.home.components.BottomNavigationComponent
-import com.example.fooddelivery.presentation.home.ui.theme.FoodDeliveryTheme
 import com.example.fooddelivery.presentation.main.NotificationsDestination
 import com.example.fooddelivery.presentation.main.OrderDetails
+import com.example.fooddelivery.presentation.main.RestaurantPage
+import com.example.fooddelivery.presentation.ui.theme.FoodDeliveryTheme
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,13 +56,14 @@ fun HomeView() {
             NotificationsDestination.route -> {
                 bottomBarState.value = false
             }
+
+            RestaurantPage.route -> {
+                bottomBarState.value = false
+            }
             else -> {
                 bottomBarState.value = true
             }
         }
-
-
-
 
 
         Scaffold(bottomBar = { BottomNavigationComponent(navController = navController,

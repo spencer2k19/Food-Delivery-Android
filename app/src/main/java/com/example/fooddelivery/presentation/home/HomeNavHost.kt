@@ -9,10 +9,12 @@ import com.example.fooddelivery.presentation.chat.ChatView
 import com.example.fooddelivery.presentation.house.HouseView
 import com.example.fooddelivery.presentation.main.NotificationsDestination
 import com.example.fooddelivery.presentation.main.OrderDetails
+import com.example.fooddelivery.presentation.main.RestaurantPage
 import com.example.fooddelivery.presentation.notifications.NotificationsView
 import com.example.fooddelivery.presentation.order_details.OrderDetailsView
 import com.example.fooddelivery.presentation.orders.OrdersView
 import com.example.fooddelivery.presentation.profile.ProfileView
+import com.example.fooddelivery.presentation.restaurant_details.RestaurantDetailsView
 
 @Composable
 fun HomeNavHost(
@@ -42,6 +44,10 @@ fun HomeNavHost(
 
         composable(OrderDetails.route) {
             OrderDetailsView(navController)
+        }
+
+        composable(RestaurantPage.route) {
+            RestaurantDetailsView(navController)
         }
     }
 }
