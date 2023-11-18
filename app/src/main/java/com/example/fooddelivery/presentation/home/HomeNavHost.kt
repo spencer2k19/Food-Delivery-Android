@@ -5,9 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.fooddelivery.presentation.cart.CartView
 import com.example.fooddelivery.presentation.chat.ChatView
 import com.example.fooddelivery.presentation.favorites.FavoritesView
 import com.example.fooddelivery.presentation.house.HouseView
+import com.example.fooddelivery.presentation.main.Cart
 import com.example.fooddelivery.presentation.main.Favorites
 import com.example.fooddelivery.presentation.main.NotificationsDestination
 import com.example.fooddelivery.presentation.main.OrderDetails
@@ -66,6 +68,10 @@ fun HomeNavHost(
 
         composable(PopularMenu.route) {
             PopularMenuView(navController)
+        }
+
+        composable(Cart.route) {
+            CartView(navController)
         }
     }
 }

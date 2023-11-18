@@ -45,6 +45,7 @@ import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.house.components.CategoryItemView
 import com.example.fooddelivery.presentation.house.components.FoodItemView
 import com.example.fooddelivery.presentation.house.components.RestaurantItemView
+import com.example.fooddelivery.presentation.main.Cart
 import com.example.fooddelivery.presentation.main.NotificationsDestination
 import com.example.fooddelivery.presentation.main.RestaurantPage
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
@@ -100,6 +101,19 @@ fun HouseView(
 
                       .background(color = Color(0xFFF9F9F9), shape = CircleShape)) {
                       Icon(painter = painterResource(id = R.drawable.notification), contentDescription = "",
+                          modifier = Modifier.align(Alignment.Center))
+                  }
+
+                  Spacer(modifier = Modifier.width(10.dp))
+                  Box(modifier = Modifier
+                      .clickable {
+                          navController?.navigate(Cart.route)
+                      }
+                      .width(54.dp)
+                      .height(54.dp)
+
+                      .background(color = Color(0xFFF9F9F9), shape = CircleShape)) {
+                      Icon(painter = painterResource(id = R.drawable.cart_apple), contentDescription = "",
                           modifier = Modifier.align(Alignment.Center))
                   }
               }

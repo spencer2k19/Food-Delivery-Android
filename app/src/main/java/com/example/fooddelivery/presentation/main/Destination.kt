@@ -109,6 +109,12 @@ object PopularMenu : Destination {
         set(value) {}
 }
 
+object Cart : Destination {
+    override var route: String
+        get() = "cart"
+        set(value) {}
+}
+
 
 
 object OrderDetails : Destination {

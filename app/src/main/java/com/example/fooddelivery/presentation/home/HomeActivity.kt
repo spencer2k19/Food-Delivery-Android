@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fooddelivery.presentation.home.components.BottomNavigationComponent
+import com.example.fooddelivery.presentation.main.Cart
 import com.example.fooddelivery.presentation.main.Favorites
 import com.example.fooddelivery.presentation.main.NotificationsDestination
 import com.example.fooddelivery.presentation.main.OrderDetails
@@ -72,6 +73,10 @@ fun HomeView() {
             }
 
             PopularMenu.route -> {
+                bottomBarState.value = false
+            }
+
+            Cart.route -> {
                 bottomBarState.value = false
             }
 
