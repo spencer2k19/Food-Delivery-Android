@@ -1,5 +1,7 @@
 package com.example.fooddelivery.presentation.restaurant_details
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollable
@@ -21,6 +23,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +33,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +50,8 @@ import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.components.TestimonialItemView
 import com.example.fooddelivery.presentation.house.components.FoodItemView
+import com.example.fooddelivery.presentation.main.PopularMenu
+import com.example.fooddelivery.presentation.main.Testimonials
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
@@ -53,14 +61,27 @@ fun RestaurantDetailsView(
     navController: NavController? = null
 ) {
     Scaffold(containerColor = Color.White) { _ ->
+
+        val scrollValue = rememberScrollState()
+
         Box(modifier = Modifier.fillMaxSize()) {
             Image(painter = painterResource(id = R.drawable.restaurant_page), contentDescription = "",
                 contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
 
+
+
+
            Column(modifier = Modifier
                .fillMaxSize()
-               .verticalScroll(rememberScrollState())
+               .verticalScroll(scrollValue)
                ) {
+
+               Log.e("scrollvalue", "SCROLL VALUE: ${scrollValue.value}")
+               println("Scrolling: ${scrollValue.value}")
+
+
+
+
                  Card(colors = CardDefaults.cardColors(
                     containerColor = Color.White
                 ), shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
@@ -193,7 +214,9 @@ fun RestaurantDetailsView(
                            )
                            Spacer(modifier = Modifier.weight(1f))
 
-                           TextButton(onClick = {  }) {
+                           TextButton(onClick = {
+                               navController?.navigate(PopularMenu.route)
+                           }) {
                                Text(
                                    text = "See all",
                                    style = TextStyle(
@@ -227,7 +250,9 @@ fun RestaurantDetailsView(
                            )
                            Spacer(modifier = Modifier.weight(1f))
 
-                           TextButton(onClick = {  }) {
+                           TextButton(onClick = {
+                               navController?.navigate(Testimonials.route)
+                           }) {
                                Text(
                                    text = "See all",
                                    style = TextStyle(
@@ -250,6 +275,18 @@ fun RestaurantDetailsView(
 
                 }
            }
+
+            AnimatedVisibility(visible = scrollValue.value == 0) {
+                TextButton(onClick = {
+                    navController?.popBackStack()
+                }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "",
+                        tint = PrimaryColor)
+
+                }
+            }
+
+
         }
     }
 }

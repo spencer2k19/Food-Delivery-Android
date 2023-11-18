@@ -89,6 +89,28 @@ object RestaurantPage : Destination {
         set(value) {}
 }
 
+object Favorites : Destination {
+    override var route: String
+        get() = "all-favourites"
+        set(value) {}
+}
+
+
+object Testimonials : Destination {
+    override var route: String
+        get() = "testimonials"
+        set(value) {}
+}
+
+
+object PopularMenu : Destination {
+    override var route: String
+        get() = "popular-menu"
+        set(value) {}
+}
+
+
+
 object OrderDetails : Destination {
     override var route: String
         get() = "order-details"

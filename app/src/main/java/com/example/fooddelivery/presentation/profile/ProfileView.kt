@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.components.FavoriteItemView
+import com.example.fooddelivery.presentation.main.Favorites
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
@@ -164,7 +165,9 @@ fun ProfileView(
                             )
                             Spacer(modifier = Modifier.weight(1f))
 
-                            TextButton(onClick = {  }) {
+                            TextButton(onClick = {
+                                navController?.navigate(Favorites.route)
+                            }) {
                                 Text(
                                     text = "See all",
                                     style = TextStyle(
@@ -181,14 +184,6 @@ fun ProfileView(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         FavoriteItemView()
-
-
-
-
-
-
-
-
 
 
 
