@@ -28,7 +28,10 @@ import com.example.fooddelivery.presentation.main.PopularMenu
 import com.example.fooddelivery.presentation.main.RestaurantPage
 import com.example.fooddelivery.presentation.main.Testimonials
 import com.example.fooddelivery.presentation.ui.theme.FoodDeliveryTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

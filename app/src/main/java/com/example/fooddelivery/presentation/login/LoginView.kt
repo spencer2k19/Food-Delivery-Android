@@ -22,15 +22,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.components.CustomFilledButton
@@ -53,17 +59,40 @@ import com.example.fooddelivery.presentation.main.ForgotPassword
 import com.example.fooddelivery.presentation.main.Register
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val activity = (LocalContext.current as? Activity)
+    val state = viewModel.state.value
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember{
+        SnackbarHostState()
+    }
 
-    Scaffold(containerColor = Color.White) { _ ->
-        var email by remember {  mutableStateOf("")}
-        var password by remember{ mutableStateOf("") }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest {event ->
+            when(event) {
+                is LoginViewModel.UIEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+                is LoginViewModel.UIEvent.ShowHomeScreen -> {
+                    activity?.startActivity(Intent(activity,HomeActivity::class.java))
+                    activity?.finish()
+                }
+            }
+        }
+    }
+
+    Scaffold(containerColor = Color.White, snackbarHost = {
+        SnackbarHost(snackbarHostState)
+    }) { _ ->
+
         var rememberMe by remember { mutableStateOf(false) }
 
 
@@ -113,9 +142,10 @@ fun LoginView(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            CustomOutlinedTextField(text = email, onValueChange = {
-                                                                  email = it
-            } , placeHolder = "Your email" )
+            CustomOutlinedTextField(text = state.email, onValueChange = {
+                viewModel.onEmailEntered(it)
+            } , placeHolder = "Your email", isError = state.errorForEmail.isNotEmpty(),
+                errorMsg = state.errorForEmail)
 
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -130,13 +160,17 @@ fun LoginView(
                     fontWeight = FontWeight(700),
                     color = Color(0xFF181E22),
                     textAlign = TextAlign.Start,
-                )
+                ),
+
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-            CustomOutlinedTextField(text = password, onValueChange = {
-                password = it
-            } , placeHolder = "Your password", keyboardType = KeyboardType.Password, obscureText = true )
+            CustomOutlinedTextField(text = state.password, onValueChange = {
+               viewModel.onPasswordEntered(it)
+            } , placeHolder = "Your password", keyboardType = KeyboardType.Password,
+                obscureText = true,
+                isError = state.errorForPassword.isNotEmpty(),
+                errorMsg = state.errorForPassword)
 
             Spacer(modifier = Modifier.height(5.dp))
                 
@@ -158,10 +192,11 @@ fun LoginView(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            CustomFilledButton(text = "SIGN IN", onClick = {
-                activity?.startActivity(Intent(activity,HomeActivity::class.java))
-                activity?.finish()
-            })
+
+                CustomFilledButton(text = "SIGN IN", onClick = {
+                   viewModel.login()
+                }, isLoading = state.isLoading)
+
 
             Spacer(modifier = Modifier.height(10.dp))
 

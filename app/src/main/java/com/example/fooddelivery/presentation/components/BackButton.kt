@@ -27,14 +27,14 @@ fun BackButton(onClick: () -> Unit) {
 
     Card(shape = RoundedCornerShape(12.dp), onClick = {
                                                       onClick()
-    },elevation = CardDefaults.elevatedCardElevation(
-
+    },elevation = CardDefaults.cardElevation(
+        defaultElevation = 5.dp
     ) ,colors = CardDefaults.cardColors(
         containerColor = Color.White,
 
     ), modifier = Modifier
-        .width(52.dp)
-        .height(52.dp)) {
+        .width(40.dp)
+        .height(40.dp)) {
         Image(imageVector = Icons.Default.ArrowBack , contentDescription = "",
             modifier = Modifier.weight(1f).align(Alignment.CenterHorizontally)
         )
