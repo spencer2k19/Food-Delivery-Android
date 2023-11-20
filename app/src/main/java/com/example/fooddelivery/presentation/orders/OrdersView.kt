@@ -31,19 +31,26 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.presentation.components.CustomProgress
 import com.example.fooddelivery.presentation.main.OrderDetails
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrdersView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: OrdersViewModel = hiltViewModel()
 ) {
+
+    var state = viewModel.state.value
+
     Scaffold(containerColor = Color.White) { _ ->
         var query by remember{ mutableStateOf("") }
 
@@ -103,12 +110,35 @@ fun OrdersView(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+            if(state.isLoading) {
+                CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
+            if (state.error.isNotEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally),
+                    text = state.error,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = Satoshi,
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF181E22),
+                        textAlign = TextAlign.Center,
+                    )
+
+                )
+            }
+
             LazyColumn(contentPadding = PaddingValues(bottom = 100.dp)) {
-                items(3) {
-                    OrderItemView(onClick = {
+
+                items(state.data) { order ->
+                    OrderItemView(order = order,onClick = {
                         navController?.navigate(OrderDetails.route)
                     })
                 }
+
+
             }
         }
     }

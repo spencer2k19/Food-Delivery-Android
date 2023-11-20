@@ -5,6 +5,7 @@ import com.example.fooddelivery.common.Utils
 import com.example.fooddelivery.data.data_source.remote.dto.LoginDto
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseCategories
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseFoods
+import com.example.fooddelivery.data.data_source.remote.dto.ResponseOrders
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseRestaurants
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseToken
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseUser
@@ -18,6 +19,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface FoodDeliveryApi {
     @POST(Endpoints.LOGIN_URL)
@@ -36,6 +38,11 @@ interface FoodDeliveryApi {
 
     @GET(Endpoints.RESTAURANTS_URL)
     suspend fun fetchRestaurants(@Header("Authorization") authorization: String = Utils.bearerToken()): ResponseRestaurants
+
+    @GET(Endpoints.ORDERS_URL)
+    suspend fun fetchOrders(
+        @Query("fields")fields: String,
+        @Header("Authorization") authorization: String = Utils.bearerToken()): ResponseOrders
 
 
 

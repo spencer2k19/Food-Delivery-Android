@@ -6,12 +6,17 @@ import com.example.fooddelivery.data.data_source.remote.AuthDataSource
 import com.example.fooddelivery.data.data_source.remote.BasicInterceptor
 import com.example.fooddelivery.data.data_source.remote.FoodDataSource
 import com.example.fooddelivery.data.data_source.remote.FoodDeliveryApi
+import com.example.fooddelivery.data.data_source.remote.OrderDataSource
 import com.example.fooddelivery.data.repository.AuthRepositoryImpl
 import com.example.fooddelivery.data.repository.FoodRepositoryImpl
+import com.example.fooddelivery.data.repository.OrderRepositoryImpl
 import com.example.fooddelivery.domain.repository.AuthRepository
 import com.example.fooddelivery.domain.repository.FoodRepository
+import com.example.fooddelivery.domain.repository.OrderRepository
 import com.example.fooddelivery.domain.use_case.food.FoodUseCases
 import com.example.fooddelivery.domain.use_case.food.GetFoods
+import com.example.fooddelivery.domain.use_case.order.GetOrders
+import com.example.fooddelivery.domain.use_case.order.OrderUseCases
 import com.example.fooddelivery.domain.use_case.restaurant.GetRestaurants
 import com.example.fooddelivery.domain.use_case.restaurant.RestaurantUseCases
 import dagger.Module
@@ -62,6 +67,12 @@ object AppModule {
         return FoodDataSource(apiService)
     }
 
+    @Provides
+    @Singleton
+    fun provideOrderDataSource(apiService: FoodDeliveryApi): OrderDataSource {
+        return OrderDataSource(apiService)
+    }
+
 
     @Provides
     @Singleton
@@ -73,6 +84,12 @@ object AppModule {
     @Singleton
     fun provideFoodRepository(dataSource: FoodDataSource): FoodRepository {
         return FoodRepositoryImpl(dataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderRepository(dataSource: OrderDataSource): OrderRepository {
+        return OrderRepositoryImpl(dataSource)
     }
 
 
@@ -87,6 +104,13 @@ object AppModule {
     @Singleton
     fun provideRestaurantUseCases(repository: FoodRepository): RestaurantUseCases {
         return RestaurantUseCases(getRestaurants = GetRestaurants(repository))
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideOrderUseCases(repository: OrderRepository): OrderUseCases {
+        return OrderUseCases(getOrders = GetOrders(repository))
     }
 
 

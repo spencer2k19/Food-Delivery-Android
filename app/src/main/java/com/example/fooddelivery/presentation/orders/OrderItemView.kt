@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,15 +29,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.common.extensions.toHumanDateFromTZ
+import com.example.fooddelivery.domain.model.Order
 import com.example.fooddelivery.presentation.ui.theme.GreenColor
+import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
+import com.example.fooddelivery.presentation.ui.theme.RedColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderItemView(
+    order: Order? = null,
     onClick: () -> Unit = {}
 ) {
+   val image = order?.foods?.first()?.foodsId?.restaurant?.logo
+    val restaurantName = order?.foods?.first()?.foodsId?.restaurant?.name
+
+    val statusColor:Color = if(order?.orderStatus?.lowercase() == "process") {
+         GreenColor
+    } else if(order?.orderStatus?.lowercase() == "completed") {
+        PrimaryColor
+    } else {
+        RedColor
+    }
+
+
     Card(colors = CardDefaults.cardColors(
         containerColor = Color.White
     ), elevation = CardDefaults.cardElevation(
@@ -52,14 +74,19 @@ fun OrderItemView(
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)) {
-            Image(painter = painterResource(id = R.drawable.subway), contentDescription = "",
-                modifier = Modifier
+
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                .data("${Endpoints.ASSETS_URL}/$image")
+                .crossfade(true)
+                .build()
+                , contentDescription = "", modifier = Modifier
                     .width(60.dp)
-                    .height(60.dp))
+                    .height(60.dp), error = painterResource(id = R.drawable.subway))
+
             Spacer(modifier = Modifier.width(20.dp))
             Column(horizontalAlignment = Alignment.Start) {
                 Text(
-                    text = "Mcdonald's",
+                    text = "$restaurantName",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = Satoshi,
@@ -71,7 +98,7 @@ fun OrderItemView(
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Text(
-                    text = "21:30",
+                    text = "${order?.dateCreated?.toHumanDateFromTZ()}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = Satoshi,
@@ -82,24 +109,30 @@ fun OrderItemView(
                 )
 
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    text = "$ 45.50",
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontFamily = Satoshi,
-                        fontWeight = FontWeight(700),
-                        color = Color(0xFF0D5EF9),
+                order?.let {
+                    Text(
+                        text = "$ ${getPriceOrder(it)}",
+                        style = TextStyle(
+                            fontSize = 12.sp,
+                            fontFamily = Satoshi,
+                            fontWeight = FontWeight(700),
+                            color = Color(0xFF0D5EF9),
 
-                        textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center,
+                        )
                     )
-                )
+                }
+
 
             }
 
             Spacer(modifier = Modifier.weight(1f))
-            Box(modifier = Modifier.width(72.dp).height(24.dp).background(GreenColor, shape = RoundedCornerShape(16.dp))) {
+            Box(modifier = Modifier
+                .width(72.dp)
+                .height(24.dp)
+                .background(statusColor, shape = RoundedCornerShape(16.dp))) {
                 Text(
-                    text = "Process",
+                    text = "${order?.orderStatus}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = Satoshi,
@@ -111,6 +144,15 @@ fun OrderItemView(
             }
         }
     }
+}
+
+fun getPriceOrder(order: Order): Double {
+    var total = 0.0
+    (order.foods?: emptyList()).forEach {foodOrder ->
+        val quantity = foodOrder.quantity ?: 0
+        total += (quantity.toDouble()) * (foodOrder.foodsId?.price ?: 0.0)
+    }
+    return total
 }
 
 
