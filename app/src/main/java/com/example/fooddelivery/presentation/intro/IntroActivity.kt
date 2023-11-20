@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.PrefSingleton
+import com.example.fooddelivery.presentation.home.HomeActivity
 import com.example.fooddelivery.presentation.main.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,8 +18,15 @@ class IntroActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             delay(3000)
-            val intent = Intent(this@IntroActivity,MainActivity::class.java)
-            startActivity(intent)
+
+            if(PrefSingleton.getTokenData() != null) {
+                val intent = Intent(this@IntroActivity,HomeActivity::class.java)
+                startActivity(intent)
+            } else {
+                val intent = Intent(this@IntroActivity,MainActivity::class.java)
+                startActivity(intent)
+            }
+
             finish()
         }
     }

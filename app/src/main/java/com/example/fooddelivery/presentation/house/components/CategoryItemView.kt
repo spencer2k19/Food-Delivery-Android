@@ -26,10 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fooddelivery.R
+import com.example.fooddelivery.domain.model.Category
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @Composable
-fun CategoryItemView() {
+fun CategoryItemView(
+    category: Category
+) {
     Card(shape = RoundedCornerShape(69.dp), modifier = Modifier
         .width(110.dp)
         .padding(end = 20.dp)
@@ -52,7 +55,7 @@ fun CategoryItemView() {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally),
-            text = "Vegetarian",
+            text = "${category.name}",
             style = TextStyle(
                 fontSize = 12.sp,
                 fontFamily = Satoshi,
@@ -68,6 +71,7 @@ fun CategoryItemView() {
 }
 
 
+/*
 @Preview
 @Composable
 fun PrevCategoryItemView() {
@@ -90,4 +94,4 @@ fun PrevCategoryItemView() {
 
 
 
-}
+}*/

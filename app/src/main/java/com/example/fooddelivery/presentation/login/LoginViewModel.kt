@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fooddelivery.common.PrefSingleton
 import com.example.fooddelivery.common.Resource
+import com.example.fooddelivery.domain.model.SessionToken
 import com.example.fooddelivery.domain.use_case.auth.LoginUseCase
 import com.example.fooddelivery.domain.use_case.auth.UserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +37,25 @@ class LoginViewModel @Inject constructor(
 
     fun onPasswordEntered(value: String) {
         _state.value = state.value.copy(password = value)
+    }
+
+    private fun fetchUserData(sessionToken: SessionToken?) {
+        //fetch user data
+        userUseCase("Bearer ${sessionToken?.accessToken}").onEach {result ->
+            when(result) {
+                is Resource.Error -> {
+                    _eventFlow.emit(UIEvent.ShowSnackbar(message = result.message?:"An unexpected error occured"))
+                    _state.value = state.value.copy(isLoading = false)
+                }
+                is Resource.Success -> {
+                    PrefSingleton.saveTokenData(sessionToken)
+                    PrefSingleton.saveUser(result.data)
+                    _state.value = LoginState(sessionToken = sessionToken, user = result.data)
+                    _eventFlow.emit(UIEvent.ShowHomeScreen)
+                }
+                else -> {}
+            }
+        }.launchIn(viewModelScope)
     }
 
 
@@ -68,22 +88,7 @@ class LoginViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     val sessionToken = result.data
-                    //fetch user data
-                    userUseCase("Bearer ${sessionToken?.accessToken}").onEach {resultUser ->
-                        when(resultUser) {
-                            is Resource.Error -> {
-                                _eventFlow.emit(UIEvent.ShowSnackbar(message = result.message?:"An unexpected error occured"))
-                                _state.value = state.value.copy(isLoading = false)
-                            }
-                            is Resource.Success -> {
-                                PrefSingleton.saveTokenData(sessionToken)
-                                PrefSingleton.saveUser(resultUser.data)
-                                _state.value = LoginState(sessionToken = sessionToken, user = resultUser.data)
-                                _eventFlow.emit(UIEvent.ShowHomeScreen)
-                            }
-                            else -> {}
-                        }
-                    }.launchIn(viewModelScope)
+                    fetchUserData(sessionToken)
 
 
                 }

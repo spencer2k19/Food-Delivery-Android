@@ -1,9 +1,16 @@
 package com.example.fooddelivery.data.data_source.remote
 
 import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.common.Utils
 import com.example.fooddelivery.data.data_source.remote.dto.LoginDto
+import com.example.fooddelivery.data.data_source.remote.dto.ResponseCategories
+import com.example.fooddelivery.data.data_source.remote.dto.ResponseFoods
+import com.example.fooddelivery.data.data_source.remote.dto.ResponseRestaurants
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseToken
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseUser
+import com.example.fooddelivery.domain.model.Category
+import com.example.fooddelivery.domain.model.Food
+import com.example.fooddelivery.domain.model.Restaurant
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -18,7 +25,21 @@ interface FoodDeliveryApi {
 
 
     @GET(Endpoints.USER_URL)
-    suspend fun getCurrentUser(@Header("Authorization") authorization: String): ResponseUser
+    suspend fun getCurrentUser(@Header("Authorization") authorization: String = Utils.bearerToken()): ResponseUser
+
+
+    @GET(Endpoints.CATEGORIES_URL)
+    suspend fun fetchCategories(@Header("Authorization") authorization: String = Utils.bearerToken()): ResponseCategories
+
+    @GET(Endpoints.FOODS_URL)
+    suspend fun fetchFoods(@Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
+
+    @GET(Endpoints.RESTAURANTS_URL)
+    suspend fun fetchRestaurants(@Header("Authorization") authorization: String = Utils.bearerToken()): ResponseRestaurants
+
+
+
+
 
 
 }

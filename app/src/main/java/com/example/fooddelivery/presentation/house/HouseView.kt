@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -37,11 +39,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.presentation.components.CustomProgress
 import com.example.fooddelivery.presentation.house.components.CategoryItemView
 import com.example.fooddelivery.presentation.house.components.FoodItemView
 import com.example.fooddelivery.presentation.house.components.RestaurantItemView
@@ -53,8 +58,15 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HouseView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: HouseViewModel = hiltViewModel()
 ) {
+
+       var categoryState = viewModel.categoryState.value
+        var foodState = viewModel.foodState.value
+        var restaurantState = viewModel.restaurantState.value
+
+
         Scaffold(containerColor = Color.White) { _ ->
             var query by remember { mutableStateOf("") }
 
@@ -131,10 +143,32 @@ fun HouseView(
                         ),
                         modifier = Modifier.padding(horizontal = 20.dp)
                     )
+
+                    if(categoryState.isLoading) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
+                    if (categoryState.error.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally),
+                            text = categoryState.error,
+                            style = TextStyle(
+                                fontSize = 12.sp,
+                                fontFamily = Satoshi,
+                                fontWeight = FontWeight(500),
+                                color = Color(0xFF181E22),
+                                textAlign = TextAlign.Center,
+                            )
+
+                        )
+                    }
                     LazyRow(contentPadding = PaddingValues(end = 20.dp, top = 10.dp, start = 20.dp, bottom = 20.dp)) {
-                        items(6) {
-                            CategoryItemView()
+                        items(categoryState.categories) {category ->
+                            CategoryItemView(category = category)
                         }
+
                     }
 
                     Text(text = "Popular this week",style = TextStyle(
