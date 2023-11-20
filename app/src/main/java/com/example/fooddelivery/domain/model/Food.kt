@@ -23,7 +23,7 @@ data class Food(
     @SerializedName("name")
     val name: String?,
     @SerializedName("price")
-    val price: Int?,
+    val price: Double?,
     @SerializedName("restaurant")
     val restaurant: Int?,
     @SerializedName("short_description")

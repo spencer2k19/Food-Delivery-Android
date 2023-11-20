@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,12 +34,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.domain.model.Food
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @Composable
-fun FoodItemView() {
+fun FoodItemView(
+    food: Food? = null
+) {
     Box(modifier = Modifier.height(320.dp)) {
         Card(modifier = Modifier
             .padding(end = 10.dp)
@@ -102,7 +109,7 @@ fun FoodItemView() {
                      Spacer(modifier = Modifier.width(2.dp))
 
                      Text(
-                         text = "5.99",
+                         text = "${food?.price}",
                          style = TextStyle(
                              fontSize = 16.sp,
                              fontFamily = Satoshi,
@@ -149,14 +156,13 @@ fun FoodItemView() {
         }
 
         Row(modifier = Modifier.align(Alignment.TopCenter)) {
-            Image(painter = painterResource(id = R.drawable.chicken_sandwich), contentDescription = "",
-                modifier = Modifier
-                    .width(150.dp)
-                    .height(150.dp)
-                  ,
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                .data("${Endpoints.ASSETS_URL}/${food?.image}")
+                .crossfade(true)
+                .build(), contentDescription = food?.name, modifier = Modifier
+                .width(150.dp).height(150.dp), contentScale = ContentScale.FillBounds)
 
-                contentScale = ContentScale.FillBounds,
-               )
+
             Box(modifier = Modifier
                 .offset(x = (-25).dp, y = 10.dp)
                 .width(32.dp)
@@ -179,8 +185,3 @@ fun FoodItemView() {
 }
 
 
-@Preview
-@Composable
-fun PrevFoodItemView() {
-    FoodItemView()
-}

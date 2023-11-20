@@ -1,5 +1,6 @@
 package com.example.fooddelivery.presentation.house.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,7 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
 import com.example.fooddelivery.domain.model.Category
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
@@ -43,11 +48,14 @@ fun CategoryItemView(
             defaultElevation = 5.dp
         )) {
 
-        Image(painter = painterResource(id = R.drawable.vegetarian), contentDescription = "",
-            contentScale = ContentScale.FillBounds, modifier = Modifier
-                .fillMaxWidth()
-                .height(90.dp)
-                .padding(5.dp))
+        AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+            .data("${Endpoints.ASSETS_URL}/${category.image}")
+            .crossfade(true)
+            .build()
+            , contentDescription = category.name, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxWidth()
+                .height(90.dp).padding(5.dp))
+
+
 
 
         Spacer(modifier = Modifier.height(10.dp))

@@ -19,7 +19,7 @@ data class Restaurant(
     @SerializedName("name")
     val name: String?,
     @SerializedName("rating")
-    val rating: Int?,
+    val rating: Double?,
     @SerializedName("status")
     val status: String?
 )

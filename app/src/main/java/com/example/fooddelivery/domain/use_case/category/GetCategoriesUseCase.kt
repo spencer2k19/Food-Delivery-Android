@@ -17,7 +17,7 @@ class GetCategoriesUseCase @Inject constructor(
                 emit(Resource.Loading())
                 val categories = repository.fetchCategories()
                 emit(Resource.Success(categories))
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 emit(Resource.Error(e.message?: ""))
             }
         }

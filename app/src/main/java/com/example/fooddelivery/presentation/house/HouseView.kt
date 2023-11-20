@@ -181,10 +181,33 @@ fun HouseView(
                         modifier = Modifier.padding(horizontal = 20.dp)
                     )
 
+
+                    if(foodState.isLoading) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
+                    if (foodState.error.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally),
+                            text = foodState.error,
+                            style = TextStyle(
+                                fontSize = 12.sp,
+                                fontFamily = Satoshi,
+                                fontWeight = FontWeight(500),
+                                color = Color(0xFF181E22),
+                                textAlign = TextAlign.Center,
+                            )
+
+                        )
+                    }
+
                     LazyRow(contentPadding = PaddingValues(start = 20.dp, end = 40.dp, top = 10.dp)) {
-                        items(6) {
-                            FoodItemView()
+                        items(foodState.foods) {food ->
+                            FoodItemView(food = food)
                         }
+
                     }
 
                     Text(text = "Popular Restaurants",style = TextStyle(
@@ -197,12 +220,38 @@ fun HouseView(
                         modifier = Modifier.padding(horizontal = 20.dp)
                     )
 
+
+
+                    if(restaurantState.isLoading) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
+                    if (restaurantState.error.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally),
+                            text = restaurantState.error,
+                            style = TextStyle(
+                                fontSize = 12.sp,
+                                fontFamily = Satoshi,
+                                fontWeight = FontWeight(500),
+                                color = Color(0xFF181E22),
+                                textAlign = TextAlign.Center,
+                            )
+
+                        )
+                    }
+
                     LazyRow(contentPadding = PaddingValues(horizontal = 20.dp, vertical = 15.dp)) {
-                        items(3) {
+
+                        items(restaurantState.restaurants) {restaurant ->
                             RestaurantItemView(onClick = {
                                 navController?.navigate(RestaurantPage.route)
-                            })
+                            }, restaurant = restaurant)
                         }
+
                     }
                     
                     Spacer(modifier = Modifier.height(100.dp))

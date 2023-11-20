@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,12 +25,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.domain.model.Restaurant
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RestaurantItemView(
+    restaurant: Restaurant? = null,
     onClick: () -> Unit = {}
 ) {
     Card(shape = RoundedCornerShape(16.dp), onClick = {
@@ -45,15 +51,19 @@ fun RestaurantItemView(
                 vertical = 10.dp
             )
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.mcdonald), contentDescription = "",
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                .data("${Endpoints.ASSETS_URL}/${restaurant?.logo}")
+                .crossfade(true)
+                .build(), error = painterResource(id = R.drawable.mcdonald) ,contentDescription = restaurant?.name,
                 modifier = Modifier
                     .width(79.dp)
-                    .height(70.dp), contentScale = ContentScale.FillBounds
-            )
+                    .height(70.dp), contentScale = ContentScale.FillBounds)
+
+
+
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "McDonald’s",
+                text = "${restaurant?.name}",
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = Satoshi,

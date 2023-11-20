@@ -1,5 +1,6 @@
 package com.example.fooddelivery.di
 
+import android.content.Context
 import com.example.fooddelivery.common.Endpoints
 import com.example.fooddelivery.data.data_source.remote.AuthDataSource
 import com.example.fooddelivery.data.data_source.remote.BasicInterceptor
@@ -16,6 +17,7 @@ import com.example.fooddelivery.domain.use_case.restaurant.RestaurantUseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -29,13 +31,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFoodDeliveryApi():FoodDeliveryApi {
+    fun provideFoodDeliveryApi(@ApplicationContext appContext: Context):FoodDeliveryApi {
+
         return Retrofit.Builder()
             .baseUrl(Endpoints.BASE_URL)
             .client(OkHttpClient.Builder().also { client->
                 client.retryOnConnectionFailure(true)
                 client.followRedirects(false)
-                client.addInterceptor(BasicInterceptor())
+                client.addInterceptor(BasicInterceptor(context = appContext))
                 client.connectTimeout(1, TimeUnit.MINUTES)
                 client.writeTimeout(1, TimeUnit.MINUTES)
                 client.readTimeout(1, TimeUnit.MINUTES)

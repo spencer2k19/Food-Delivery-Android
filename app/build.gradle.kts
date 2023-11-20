@@ -101,4 +101,8 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+
 }

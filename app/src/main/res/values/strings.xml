@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Food Delivery</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="oui">Oui</string>
+    <string name="non">Non</string>
+    <string name="ok">OK</string>
+    <string name="logout">Déconnexion</string>
+    <string name="session_has_expired">Votre session a expiré</string>
 </resources>
