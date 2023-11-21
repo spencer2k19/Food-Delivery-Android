@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,14 +30,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.domain.model.Food
 import com.example.fooddelivery.presentation.ui.theme.GreenColor
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @Composable
 fun FavoriteItemView(
-
+    food: Food? = null
 ) {
     Card(colors = CardDefaults.cardColors(
         containerColor = Color.White
@@ -52,14 +57,21 @@ fun FavoriteItemView(
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)) {
-            Image(painter = painterResource(id = R.drawable.noodle), contentDescription = "",
-                modifier = Modifier
+
+
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                .data("${Endpoints.ASSETS_URL}/${food?.image}")
+                .crossfade(true)
+                .build()
+                , contentDescription = "", modifier = Modifier
                     .width(60.dp)
-                    .height(60.dp))
+                    .height(60.dp), error = painterResource(id = R.drawable.noodle))
+
+
             Spacer(modifier = Modifier.width(20.dp))
             Column(horizontalAlignment = Alignment.Start) {
                 Text(
-                    text = "Noodle",
+                    text = "${food?.name}",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = Satoshi,
@@ -72,7 +84,7 @@ fun FavoriteItemView(
 
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "$ 45.50",
+                    text = "${food?.currency} ${food?.price}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = Satoshi,
@@ -93,8 +105,3 @@ fun FavoriteItemView(
 }
 
 
-@Preview
-@Composable
-fun PrevFavoriteItemView() {
-    FavoriteItemView()
-}

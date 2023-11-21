@@ -31,11 +31,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.PrefSingleton
+import com.example.fooddelivery.presentation.components.CustomProgress
 import com.example.fooddelivery.presentation.components.FavoriteItemView
 import com.example.fooddelivery.presentation.main.Favorites
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
@@ -44,8 +48,12 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val user = PrefSingleton.getUser()
+    var state = viewModel.state.value
+
     Scaffold(containerColor = Color.White) {_ ->
         Box(modifier = Modifier.fillMaxSize()
         ) {
@@ -55,6 +63,8 @@ fun ProfileView(
             Column(modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())) {
+
+
                 Card(colors = CardDefaults.cardColors(
                     containerColor = Color.White
                 ), elevation = CardDefaults.cardElevation(
@@ -88,7 +98,7 @@ fun ProfileView(
                         Spacer(modifier = Modifier.height(10.dp))
 
                          Text(
-                            text = "Muhammad Dominguez",
+                            text = "${user?.firstName} ${user?.lastName} ",
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontFamily = Satoshi,
@@ -99,7 +109,7 @@ fun ProfileView(
                         Spacer(modifier = Modifier.height(5.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "Muhamed_dominguez@yahoo.com",
+                                text = "${user?.email}",
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontFamily = Satoshi,
@@ -183,7 +193,35 @@ fun ProfileView(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        FavoriteItemView()
+
+                        if(state.isLoading) {
+                            Spacer(modifier = Modifier.height(10.dp))
+                            CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+                        }
+                        if (state.error.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.CenterHorizontally),
+                                text = state.error,
+                                style = TextStyle(
+                                    fontSize = 12.sp,
+                                    fontFamily = Satoshi,
+                                    fontWeight = FontWeight(500),
+                                    color = Color(0xFF181E22),
+                                    textAlign = TextAlign.Center,
+                                )
+
+                            )
+                        }
+
+                        if(state.data.isNotEmpty()) {
+                            state.data.subList(0,3).forEach {food->
+                                FavoriteItemView(food)
+                            }
+                        }
+
+
 
 
 

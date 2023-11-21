@@ -8,4 +8,6 @@ interface FoodRepository {
     suspend fun fetchCategories(): List<Category>
     suspend fun fetchFoods(): List<Food>
     suspend fun fetchRestaurants(): List<Restaurant>
+
+    suspend fun fetchFavoriteFoods(): List<Food>
 }

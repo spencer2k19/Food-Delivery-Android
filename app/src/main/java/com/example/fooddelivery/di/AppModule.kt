@@ -14,6 +14,7 @@ import com.example.fooddelivery.domain.repository.AuthRepository
 import com.example.fooddelivery.domain.repository.FoodRepository
 import com.example.fooddelivery.domain.repository.OrderRepository
 import com.example.fooddelivery.domain.use_case.food.FoodUseCases
+import com.example.fooddelivery.domain.use_case.food.GetFavoriteFoods
 import com.example.fooddelivery.domain.use_case.food.GetFoods
 import com.example.fooddelivery.domain.use_case.order.GetOrders
 import com.example.fooddelivery.domain.use_case.order.OrderUseCases
@@ -96,7 +97,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFoodUseCases(repository: FoodRepository): FoodUseCases {
-        return FoodUseCases(getFoods = GetFoods(repository))
+        return FoodUseCases(getFoods = GetFoods(repository), getFavoriteFoods = GetFavoriteFoods(repository))
     }
 
 

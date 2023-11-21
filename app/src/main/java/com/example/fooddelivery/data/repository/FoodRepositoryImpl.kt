@@ -21,4 +21,8 @@ class FoodRepositoryImpl @Inject constructor(
     override suspend fun fetchRestaurants(): List<Restaurant> {
         return dataSource.fetchRestaurants().data
     }
+
+    override suspend fun fetchFavoriteFoods(): List<Food> {
+        return dataSource.fetchFavoriteFoods().data
+    }
 }

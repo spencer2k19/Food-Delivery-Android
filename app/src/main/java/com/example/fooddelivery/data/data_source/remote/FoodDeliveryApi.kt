@@ -36,6 +36,9 @@ interface FoodDeliveryApi {
     @GET(Endpoints.FOODS_URL)
     suspend fun fetchFoods(@Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
 
+    @GET(Endpoints.FOODS_URL)
+    suspend fun fetchFavoriteFoods(@Query("filter[is_liked][_eq]") isLiked: Boolean = true ,@Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
+
     @GET(Endpoints.RESTAURANTS_URL)
     suspend fun fetchRestaurants(@Header("Authorization") authorization: String = Utils.bearerToken()): ResponseRestaurants
 

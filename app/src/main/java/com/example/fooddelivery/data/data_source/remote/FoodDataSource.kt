@@ -25,6 +25,12 @@ class FoodDataSource @Inject constructor(
         }
     }
 
+    suspend fun fetchFavoriteFoods(): ResponseFoods {
+        return safeApiCall {
+            apiService.fetchFavoriteFoods()
+        }
+    }
+
     suspend fun fetchRestaurants(): ResponseRestaurants {
         return safeApiCall {
             apiService.fetchRestaurants()
