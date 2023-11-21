@@ -54,6 +54,7 @@ import com.example.fooddelivery.presentation.main.Cart
 import com.example.fooddelivery.presentation.main.NotificationsDestination
 import com.example.fooddelivery.presentation.main.RestaurantPage
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
+import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -248,7 +249,8 @@ fun HouseView(
 
                         items(restaurantState.restaurants) {restaurant ->
                             RestaurantItemView(onClick = {
-                                navController?.navigate(RestaurantPage.route)
+                                val restaurantGson = Gson().toJson(restaurant)
+                                navController?.navigate(RestaurantPage.route+"?restaurant=$restaurantGson")
                             }, restaurant = restaurant)
                         }
 

@@ -39,15 +39,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.domain.model.Restaurant
+import com.example.fooddelivery.presentation.components.CustomProgress
 import com.example.fooddelivery.presentation.components.TestimonialItemView
 import com.example.fooddelivery.presentation.house.components.FoodItemView
 import com.example.fooddelivery.presentation.main.PopularMenu
@@ -58,27 +66,36 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RestaurantDetailsView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    restaurant: Restaurant? = null,
+    viewModel: RestaurantDetailsViewModel = hiltViewModel()
 ) {
+
+    val foodsState = viewModel.foodState.value
+    val testimonialsState = viewModel.testimonialState.value
+
+
     Scaffold(containerColor = Color.White) { _ ->
 
         val scrollValue = rememberScrollState()
 
+
         Box(modifier = Modifier.fillMaxSize()) {
-            Image(painter = painterResource(id = R.drawable.restaurant_page), contentDescription = "",
-                contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
 
-
-
+        AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+            .data("${Endpoints.ASSETS_URL}/${restaurant?.coverImage}")
+            .crossfade(true)
+            .build(),
+            contentDescription = "${restaurant?.name}",
+            error = painterResource(id = R.drawable.restaurant_page),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+            )
 
            Column(modifier = Modifier
                .fillMaxSize()
                .verticalScroll(scrollValue)
                ) {
-
-               Log.e("scrollvalue", "SCROLL VALUE: ${scrollValue.value}")
-               println("Scrolling: ${scrollValue.value}")
-
 
 
 
@@ -137,7 +154,7 @@ fun RestaurantDetailsView(
 
                        Spacer(modifier = Modifier.height(20.dp))
                        Text(
-                           text = "Mcdonald's ",
+                           text = "${restaurant?.name}",
                            style = TextStyle(
                                fontSize = 16.sp,
                                fontFamily = Satoshi,
@@ -178,7 +195,7 @@ fun RestaurantDetailsView(
                            }
                            Spacer(modifier = Modifier.width(10.dp))
                            Text(
-                               text = "4.8 rating",
+                               text = "${restaurant?.rating} rating",
                                style = TextStyle(
                                    fontSize = 14.sp,
                                    fontFamily = Satoshi,
@@ -192,7 +209,7 @@ fun RestaurantDetailsView(
                        Spacer(modifier = Modifier.height(20.dp))
 
                        Text(
-                           text = "McDonald's is the world's largest fast food restaurant chain, serving over 69 million customers daily in over 100 countries in more than 40,000 outlets as of ...",
+                           text = "${restaurant?.description}",
                            style = TextStyle(
                                fontSize = 14.sp,
                                fontFamily = Satoshi,
@@ -230,11 +247,33 @@ fun RestaurantDetailsView(
 
                        }
                        Spacer(modifier = Modifier.height(20.dp))
+                       if(foodsState.isLoading) {
+                           Spacer(modifier = Modifier.height(10.dp))
+                           CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+                       }
+                       if (foodsState.error.isNotEmpty()) {
+                           Text(
+                               modifier = Modifier
+                                   .fillMaxWidth()
+                                   .align(Alignment.CenterHorizontally),
+                               text = foodsState.error,
+                               style = TextStyle(
+                                   fontSize = 12.sp,
+                                   fontFamily = Satoshi,
+                                   fontWeight = FontWeight(500),
+                                   color = Color(0xFF181E22),
+                                   textAlign = TextAlign.Center,
+                               )
+
+                           )
+                       }
+
 
                        LazyRow {
-                           items(7) {
-                               FoodItemView()
+                           items(foodsState.data) {food ->
+                               FoodItemView(food)
                            }
+
                        }
                        Spacer(modifier = Modifier.height(20.dp))
 
@@ -251,7 +290,7 @@ fun RestaurantDetailsView(
                            Spacer(modifier = Modifier.weight(1f))
 
                            TextButton(onClick = {
-                               navController?.navigate(Testimonials.route)
+                               navController?.navigate(Testimonials.route+"?restaurantId=${restaurant?.id}")
                            }) {
                                Text(
                                    text = "See all",
@@ -267,8 +306,34 @@ fun RestaurantDetailsView(
                        }
                        Spacer(modifier = Modifier.height(20.dp))
 
-                       TestimonialItemView()
-                       TestimonialItemView()
+                       if(testimonialsState.isLoading) {
+                           Spacer(modifier = Modifier.height(10.dp))
+                           CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+                       }
+                       if (testimonialsState.error.isNotEmpty()) {
+                           Text(
+                               modifier = Modifier
+                                   .fillMaxWidth()
+                                   .align(Alignment.CenterHorizontally),
+                               text = foodsState.error,
+                               style = TextStyle(
+                                   fontSize = 12.sp,
+                                   fontFamily = Satoshi,
+                                   fontWeight = FontWeight(500),
+                                   color = Color(0xFF181E22),
+                                   textAlign = TextAlign.Center,
+                               )
+
+                           )
+                       }
+
+                       if(testimonialsState.data.isNotEmpty()) {
+                           testimonialsState.data.subList(0,1).forEach {testimonial ->
+                               TestimonialItemView(testimonial)
+                           }
+                       }
+
+
                        Spacer(modifier = Modifier.height(400.dp))
 
                    }

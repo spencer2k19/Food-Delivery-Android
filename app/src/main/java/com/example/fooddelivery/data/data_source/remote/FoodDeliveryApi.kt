@@ -54,7 +54,7 @@ interface FoodDeliveryApi {
     suspend fun fetchFoodsPerRestaurant(@Query("filter[restaurant][id][_eq]") restaurantId: Int ,
                                    @Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
 
-    @GET(Endpoints.FOODS_URL)
+    @GET(Endpoints.TESTIMONIALS_URL)
     suspend fun fetchTestimonials(@Query("filter[restaurant][id][_eq]") restaurantId: Int ,
                                         @Header("Authorization") authorization: String = Utils.bearerToken()):ResponseTestimonials
 

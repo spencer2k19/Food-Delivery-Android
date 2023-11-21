@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,13 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.components.BackButton
+import com.example.fooddelivery.presentation.components.CustomProgress
 import com.example.fooddelivery.presentation.components.FavoriteItemView
 import com.example.fooddelivery.presentation.components.TestimonialItemView
 import com.example.fooddelivery.presentation.notifications.NotificationItemView
@@ -41,8 +46,12 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TestimonialsView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: TestimonialsViewModel = hiltViewModel()
+
 ) {
+    val state = viewModel.testimonialState.value
+
     Scaffold(topBar = {
         TopAppBar(title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -100,20 +109,36 @@ fun TestimonialsView(
 
             Spacer(modifier = Modifier.height(30.dp))
 
+            if(state.isLoading) {
+                Spacer(modifier = Modifier.height(10.dp))
+                CustomProgress(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
+            if (state.error.isNotEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally),
+                    text = state.error,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = Satoshi,
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF181E22),
+                        textAlign = TextAlign.Center,
+                    )
+
+                )
+            }
+
+
             LazyColumn(contentPadding = PaddingValues(bottom = 60.dp, top = 10.dp)) {
-                items(4) {
-                    TestimonialItemView()
+                items(state.data) {testimonial ->
+                    TestimonialItemView(testimonial)
                 }
+
             }
         }
 
 
     }
-}
-
-
-@Preview
-@Composable
-fun PrevTestimonialsView() {
-    TestimonialsView()
 }

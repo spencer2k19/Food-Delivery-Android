@@ -18,18 +18,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.common.extensions.toHumanDateFromTZ
+import com.example.fooddelivery.domain.model.Testimonial
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @Composable
-fun TestimonialItemView() {
+fun TestimonialItemView(
+    testimonial: Testimonial? = null
+) {
     Card(colors = CardDefaults.cardColors(
         containerColor = Color.White
     ), elevation = CardDefaults.cardElevation(
@@ -43,14 +51,20 @@ fun TestimonialItemView() {
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp), verticalAlignment = Alignment.Top) {
-            Image(painter = painterResource(id = R.drawable.testimonial1),
-                contentDescription = "")
+
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                .data("${Endpoints.ASSETS_URL}/${testimonial?.avatar}")
+                .crossfade(true).build(), contentDescription = testimonial?.authorName?:"",
+                    error = painterResource(id = R.drawable.testimonial1)
+                )
+
+
 
             Spacer(modifier = Modifier.width(15.dp))
             Column(horizontalAlignment = Alignment.Start) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Ricky Martin",
+                        text = "${testimonial?.authorName}",
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = Satoshi,
@@ -64,7 +78,7 @@ fun TestimonialItemView() {
                         tint = PrimaryColor)
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "5",
+                        text = "${testimonial?.rating}",
                         style = TextStyle(
                             fontSize = 16.sp,
                             fontFamily = Satoshi,
@@ -76,7 +90,7 @@ fun TestimonialItemView() {
 
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "10.05.2023",
+                    text = "${testimonial?.dateCreated?.toHumanDateFromTZ()}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = Satoshi,
@@ -87,7 +101,7 @@ fun TestimonialItemView() {
 
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "The food is very delicious an the service is best! love it! ",
+                    text = "${testimonial?.content}",
                     modifier = Modifier.padding(end = 15.dp),
                     style = TextStyle(
                         fontSize = 12.sp,

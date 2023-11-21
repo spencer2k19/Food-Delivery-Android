@@ -3,8 +3,11 @@ package com.example.fooddelivery.presentation.home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.fooddelivery.domain.model.Restaurant
 import com.example.fooddelivery.presentation.cart.CartView
 import com.example.fooddelivery.presentation.chat.ChatView
 import com.example.fooddelivery.presentation.favorites.FavoritesView
@@ -23,6 +26,7 @@ import com.example.fooddelivery.presentation.popular_menu.PopularMenuView
 import com.example.fooddelivery.presentation.profile.ProfileView
 import com.example.fooddelivery.presentation.restaurant_details.RestaurantDetailsView
 import com.example.fooddelivery.presentation.testimonials.TestimonialsView
+import com.google.gson.Gson
 
 @Composable
 fun HomeNavHost(
@@ -54,15 +58,27 @@ fun HomeNavHost(
             OrderDetailsView(navController)
         }
 
-        composable(RestaurantPage.route) {
-            RestaurantDetailsView(navController)
+        composable(RestaurantPage.route+"?restaurant={restaurant}", arguments = listOf(
+            navArgument("restaurant") {
+                type = NavType.StringType
+                this.nullable = false
+            }
+        )) {
+            val restaurantGson = it.arguments?.getString("restaurant")
+            val restaurant = Gson().fromJson(restaurantGson,Restaurant::class.java)
+            RestaurantDetailsView(navController, restaurant = restaurant)
         }
 
         composable(Favorites.route) {
             FavoritesView(navController)
         }
 
-        composable(Testimonials.route) {
+        composable(Testimonials.route+"?restaurantId={restaurantId}", arguments = listOf(
+            navArgument("restaurantId") {
+                type = NavType.IntType
+                nullable = false
+            }
+        )) {
            TestimonialsView(navController)
         }
 
