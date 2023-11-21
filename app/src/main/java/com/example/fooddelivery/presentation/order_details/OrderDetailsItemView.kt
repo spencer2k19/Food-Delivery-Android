@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,14 +27,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.domain.model.FoodOrder
 import com.example.fooddelivery.presentation.ui.theme.GreenColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderDetailsItemView(
-
+   foodOrder: FoodOrder? = null
 ) {
     Card(colors = CardDefaults.cardColors(
         containerColor = Color.White
@@ -48,14 +53,21 @@ fun OrderDetailsItemView(
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp)) {
-            Image(painter = painterResource(id = R.drawable.noodle), contentDescription = "",
+
+            AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                .data("${Endpoints.ASSETS_URL}/${foodOrder?.foodsId?.image}")
+                .crossfade(true).build(),
+                contentDescription = "",
+                error = painterResource(id = R.drawable.noodle) ,
                 modifier = Modifier
                     .width(60.dp)
-                    .height(60.dp))
+                    .height(60.dp)
+                )
+
             Spacer(modifier = Modifier.width(20.dp))
             Column(horizontalAlignment = Alignment.Start) {
                 Text(
-                    text = "Noodle",
+                    text = "${foodOrder?.foodsId?.name}",
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = Satoshi,
@@ -68,7 +80,7 @@ fun OrderDetailsItemView(
 
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "$ 10",
+                    text = "${foodOrder?.quantity} x ${foodOrder?.foodsId?.currency}${foodOrder?.foodsId?.price}",
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontFamily = Satoshi,
@@ -87,8 +99,3 @@ fun OrderDetailsItemView(
 }
 
 
-@Preview
-@Composable
-fun PrevOrderDetailsItemView() {
-    OrderDetailsItemView()
-}

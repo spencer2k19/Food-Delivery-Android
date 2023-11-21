@@ -38,9 +38,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.domain.model.Order
 import com.example.fooddelivery.presentation.components.CustomProgress
 import com.example.fooddelivery.presentation.main.OrderDetails
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
+import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,7 +136,8 @@ fun OrdersView(
 
                 items(state.data) { order ->
                     OrderItemView(order = order,onClick = {
-                        navController?.navigate(OrderDetails.route)
+                        val orderGson = Gson().toJson(order, Order::class.java)
+                        navController?.navigate(OrderDetails.route+"?order=$orderGson")
                     })
                 }
 

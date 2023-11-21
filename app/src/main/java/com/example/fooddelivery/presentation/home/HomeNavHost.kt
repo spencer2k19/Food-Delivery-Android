@@ -54,7 +54,12 @@ fun HomeNavHost(
             NotificationsView(navController)
         }
 
-        composable(OrderDetails.route) {
+        composable(OrderDetails.route+"?order={order}", arguments = listOf(
+            navArgument("order") {
+                type = NavType.StringType
+                nullable = false
+            }
+        )) {
             OrderDetailsView(navController)
         }
 

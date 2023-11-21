@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
 import com.example.fooddelivery.presentation.components.BackButton
@@ -47,8 +49,11 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderDetailsView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: OrderDetailsViewModel = hiltViewModel()
+
 ) {
+    val state = viewModel.state.value
     Scaffold(containerColor = Color.White, topBar = {
         TopAppBar(title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -107,10 +112,17 @@ fun OrderDetailsView(
 
             Spacer(modifier = Modifier.height(20.dp))
 
+
+
             LazyColumn(contentPadding = PaddingValues(bottom = 100.dp)) {
-                items(3) {
-                   OrderDetailsItemView()
+                state.order?.let {order ->
+                    order.foods?.let {foods ->
+                        items(foods) {food ->
+                            OrderDetailsItemView(food)
+                        }
+                    }
                 }
+
                 item {
                     Box(modifier = Modifier
                         .padding(top = 20.dp)
@@ -122,7 +134,7 @@ fun OrderDetailsView(
                                 .fillMaxSize()
                                ) {
                                 Text(
-                                    text = "Basket total",
+                                    text = "Status",
                                     style = TextStyle(
                                         fontSize = 14.sp,
                                         fontFamily = Satoshi,
@@ -134,49 +146,16 @@ fun OrderDetailsView(
 
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    text = "+ USD 44.88",
+                                    text = state.order?.orderStatus?.uppercase() ?:"",
                                     style = TextStyle(
                                         fontSize = 14.sp,
                                         fontFamily = Satoshi,
                                         fontWeight = FontWeight(500),
-                                        color = Color(0xFF181E22),
+                                        color = state.statusColor ?:  Color(0xFF181E22),
 
                                         )
                                 )
                             }
-
-
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Divider()
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            Row(modifier = Modifier
-                                .fillMaxSize()
-                               ) {
-                                Text(
-                                    text = "Discount",
-                                    style = TextStyle(
-                                        fontSize = 14.sp,
-                                        fontFamily = Satoshi,
-                                        fontWeight = FontWeight(500),
-                                        color = Color(0x99181E22),
-
-                                        )
-                                )
-
-                                Spacer(modifier = Modifier.weight(1f))
-
-                                Text(
-                                    text = "- USD 1.20",
-                                    style = TextStyle(
-                                        fontSize = 14.sp,
-                                        fontFamily = Satoshi,
-                                        fontWeight = FontWeight(500),
-                                        color = Color(0xFF0D5EF9),
-                                    )
-                                )
-                            }
-
 
 
                             Spacer(modifier = Modifier.height(10.dp))
@@ -200,16 +179,18 @@ fun OrderDetailsView(
                                 Spacer(modifier = Modifier.weight(1f))
 
                                 Text(
-                                    text = "USD 43.68",
+                                    text = "USD ${state.priceTotalOrder}",
                                     style = TextStyle(
                                         fontSize = 14.sp,
                                         fontFamily = Satoshi,
-                                        fontWeight = FontWeight(700),
-                                        color = Color(0xFF181E22),
-
+                                        fontWeight = FontWeight(500),
+                                        color = Color.Black,
                                     )
                                 )
                             }
+
+
+
                         }
 
                     }
