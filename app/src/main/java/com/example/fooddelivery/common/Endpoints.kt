@@ -9,6 +9,7 @@ object Endpoints  {
     const val CATEGORIES_URL = "items/categories"
     const val FOODS_URL = "items/foods"
     const val RESTAURANTS_URL = "items/restaurants"
+    const val TESTIMONIALS_URL = "items/testimonials"
     const val ORDERS_URL = "items/orders"
     const val ASSETS_URL = BASE_URL+"assets"
 

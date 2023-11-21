@@ -7,6 +7,7 @@ import com.example.fooddelivery.data.data_source.remote.dto.ResponseCategories
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseFoods
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseOrders
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseRestaurants
+import com.example.fooddelivery.data.data_source.remote.dto.ResponseTestimonials
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseToken
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseUser
 import com.example.fooddelivery.domain.model.Category
@@ -37,7 +38,8 @@ interface FoodDeliveryApi {
     suspend fun fetchFoods(@Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
 
     @GET(Endpoints.FOODS_URL)
-    suspend fun fetchFavoriteFoods(@Query("filter[is_liked][_eq]") isLiked: Boolean = true ,@Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
+    suspend fun fetchFavoriteFoods(@Query("filter[is_liked][_eq]") isLiked: Boolean = true ,
+                                   @Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
 
     @GET(Endpoints.RESTAURANTS_URL)
     suspend fun fetchRestaurants(@Header("Authorization") authorization: String = Utils.bearerToken()): ResponseRestaurants
@@ -46,6 +48,18 @@ interface FoodDeliveryApi {
     suspend fun fetchOrders(
         @Query("fields")fields: String,
         @Header("Authorization") authorization: String = Utils.bearerToken()): ResponseOrders
+
+
+    @GET(Endpoints.FOODS_URL)
+    suspend fun fetchFoodsPerRestaurant(@Query("filter[restaurant][id][_eq]") restaurantId: Int ,
+                                   @Header("Authorization") authorization: String = Utils.bearerToken()):ResponseFoods
+
+    @GET(Endpoints.FOODS_URL)
+    suspend fun fetchTestimonials(@Query("filter[restaurant][id][_eq]") restaurantId: Int ,
+                                        @Header("Authorization") authorization: String = Utils.bearerToken()):ResponseTestimonials
+
+
+
 
 
 

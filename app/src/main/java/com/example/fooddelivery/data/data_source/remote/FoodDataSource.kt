@@ -4,6 +4,7 @@ import com.example.fooddelivery.data.data_source.BaseDataSource
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseCategories
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseFoods
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseRestaurants
+import com.example.fooddelivery.data.data_source.remote.dto.ResponseTestimonials
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseUser
 import javax.inject.Inject
 
@@ -36,4 +37,22 @@ class FoodDataSource @Inject constructor(
             apiService.fetchRestaurants()
         }
     }
+
+    suspend fun fetchFoodsPerRestaurant(restaurantId: Int): ResponseFoods {
+        return safeApiCall {
+            apiService.fetchFoodsPerRestaurant(restaurantId)
+        }
+    }
+
+    suspend fun fetchTestimonials(restaurantId: Int): ResponseTestimonials {
+        return safeApiCall {
+            apiService.fetchTestimonials(restaurantId)
+        }
+    }
+
+
+
+
+
+
 }
