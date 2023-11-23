@@ -22,6 +22,7 @@ import com.example.fooddelivery.domain.use_case.food.GetFoods
 import com.example.fooddelivery.domain.use_case.food.GetFoodsPerRestaurant
 import com.example.fooddelivery.domain.use_case.food.GetTestimonials
 import com.example.fooddelivery.domain.use_case.order.AddFoodToCart
+import com.example.fooddelivery.domain.use_case.order.AddOrder
 import com.example.fooddelivery.domain.use_case.order.GetOrders
 import com.example.fooddelivery.domain.use_case.order.GetSavedFoods
 import com.example.fooddelivery.domain.use_case.order.IncreaseFoodQuantity
@@ -138,7 +139,8 @@ object AppModule {
             addFoodToCart = AddFoodToCart(repository),
             getSavedFoods = GetSavedFoods(repository),
             removeFoodFromCart = RemoveFoodFromCart(repository),
-            increaseFoodQuantity = IncreaseFoodQuantity(repository)
+            increaseFoodQuantity = IncreaseFoodQuantity(repository),
+            addOrder = AddOrder(repository)
         )
     }
 

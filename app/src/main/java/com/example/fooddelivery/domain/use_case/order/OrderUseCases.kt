@@ -5,5 +5,6 @@ data class OrderUseCases(
     val addFoodToCart: AddFoodToCart,
     val getSavedFoods: GetSavedFoods,
     val removeFoodFromCart: RemoveFoodFromCart,
-    val increaseFoodQuantity: IncreaseFoodQuantity
+    val increaseFoodQuantity: IncreaseFoodQuantity,
+    val addOrder: AddOrder
 )

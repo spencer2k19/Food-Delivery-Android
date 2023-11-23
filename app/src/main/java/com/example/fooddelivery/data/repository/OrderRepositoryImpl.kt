@@ -3,6 +3,7 @@ package com.example.fooddelivery.data.repository
 import com.example.fooddelivery.data.data_source.local.FoodsDao
 import com.example.fooddelivery.data.data_source.local.entity.FoodEntity
 import com.example.fooddelivery.data.data_source.remote.OrderDataSource
+import com.example.fooddelivery.data.data_source.remote.dto.order.OrderDto
 import com.example.fooddelivery.domain.model.Order
 import com.example.fooddelivery.domain.repository.OrderRepository
 import kotlinx.coroutines.flow.Flow
@@ -34,5 +35,9 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun deleteFood(food: FoodEntity) {
        dao.deleteFood(food)
+    }
+
+    override suspend fun addOrder(data: OrderDto) {
+        dataSource.addOrder(order = data)
     }
 }

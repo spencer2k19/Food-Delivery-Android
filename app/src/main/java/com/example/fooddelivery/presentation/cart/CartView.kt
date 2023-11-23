@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,6 +46,7 @@ import com.example.fooddelivery.common.extensions.toPriceString
 import com.example.fooddelivery.presentation.components.BackButton
 import com.example.fooddelivery.presentation.components.CustomFilledButton
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,7 +135,9 @@ fun CartView(
                      Spacer(modifier = Modifier.height(30.dp))
 
                      Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
-                         CustomFilledButton(text = "Place my order", onClick = { })
+                         CustomFilledButton(text = "Place my order", onClick = {
+
+                         })
                      }
                  }
             }

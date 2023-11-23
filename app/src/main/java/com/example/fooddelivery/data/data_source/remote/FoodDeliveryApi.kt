@@ -10,6 +10,7 @@ import com.example.fooddelivery.data.data_source.remote.dto.ResponseRestaurants
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseTestimonials
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseToken
 import com.example.fooddelivery.data.data_source.remote.dto.ResponseUser
+import com.example.fooddelivery.data.data_source.remote.dto.order.OrderDto
 import com.example.fooddelivery.domain.model.Category
 import com.example.fooddelivery.domain.model.Food
 import com.example.fooddelivery.domain.model.Restaurant
@@ -57,6 +58,10 @@ interface FoodDeliveryApi {
     @GET(Endpoints.TESTIMONIALS_URL)
     suspend fun fetchTestimonials(@Query("filter[restaurant][id][_eq]") restaurantId: Int ,
                                         @Header("Authorization") authorization: String = Utils.bearerToken()):ResponseTestimonials
+
+
+    @POST(Endpoints.ORDERS_URL)
+    suspend fun addOrder(@Body data: OrderDto): Unit
 
 
 
