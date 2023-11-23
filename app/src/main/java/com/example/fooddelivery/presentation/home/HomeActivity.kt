@@ -57,21 +57,21 @@ fun HomeView() {
 
         //Control bottom Bar
         when(navBackStackEntry?.destination?.route) {
-            OrderDetails.route -> {
+            OrderDetails.route+"?order={order}" -> {
                 bottomBarState.value = false
             }
             NotificationsDestination.route -> {
                 bottomBarState.value = false
             }
 
-            RestaurantPage.route -> {
+            RestaurantPage.route+"?restaurant={restaurant}" -> {
                 bottomBarState.value = false
             }
             Favorites.route -> {
                 bottomBarState.value = false
             }
 
-            Testimonials.route -> {
+            Testimonials.route+"?restaurantId={restaurantId}" -> {
                 bottomBarState.value = false
             }
 
@@ -82,6 +82,9 @@ fun HomeView() {
             Cart.route -> {
                 bottomBarState.value = false
             }
+
+
+
 
             else -> {
                 bottomBarState.value = true

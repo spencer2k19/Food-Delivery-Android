@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -37,8 +38,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fooddelivery.R
+import com.example.fooddelivery.common.extensions.toPriceString
 import com.example.fooddelivery.presentation.components.BackButton
 import com.example.fooddelivery.presentation.components.CustomFilledButton
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
@@ -46,8 +49,12 @@ import com.example.fooddelivery.presentation.ui.theme.Satoshi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartView(
-    navController: NavController? = null
+    navController: NavController? = null,
+    viewModel: CartViewModel = hiltViewModel()
 ) {
+
+    val state = viewModel.state.value
+
     Scaffold(topBar = {
         TopAppBar(title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -73,9 +80,15 @@ fun CartView(
                 item {
                     Spacer(modifier = Modifier.height(50.dp))
                 }
-                items(3) {
-                    CartItemView()
+
+                items(state.data) {food->
+                    CartItemView(food, addQuantityCallback = {
+                        viewModel.increaseFoodQuantity(food.id)
+                    }, reduceQuantityCallback = {
+                        viewModel.removeFoodFromCart(food.id)
+                    })
                 }
+
                  item {
                      Spacer(modifier = Modifier.height(20.dp))
                      Text(text = "Leave a comment", fontSize = 15.sp, fontWeight = FontWeight.SemiBold,
@@ -84,7 +97,8 @@ fun CartView(
                      OutlinedTextField(value = comment, onValueChange = {
                          comment = it
                      }, modifier = Modifier
-                         .fillMaxWidth().height(100.dp),
+                         .fillMaxWidth()
+                         .height(100.dp),
 
                          shape = RoundedCornerShape(10.dp),
                          colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -108,7 +122,7 @@ fun CartView(
                      Spacer(modifier = Modifier.height(20.dp))
 
                      Text(
-                         text = "Total: 20.04 $",
+                         text = "Total: ${state.total.toPriceString()} $",
                          fontFamily = Satoshi,
                          fontWeight = FontWeight.Bold,
                          fontSize = 17.sp,

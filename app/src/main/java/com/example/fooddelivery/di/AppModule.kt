@@ -1,7 +1,10 @@
 package com.example.fooddelivery.di
 
+import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.data.data_source.local.FoodDeliveryDatabase
 import com.example.fooddelivery.data.data_source.remote.AuthDataSource
 import com.example.fooddelivery.data.data_source.remote.BasicInterceptor
 import com.example.fooddelivery.data.data_source.remote.FoodDataSource
@@ -18,8 +21,12 @@ import com.example.fooddelivery.domain.use_case.food.GetFavoriteFoods
 import com.example.fooddelivery.domain.use_case.food.GetFoods
 import com.example.fooddelivery.domain.use_case.food.GetFoodsPerRestaurant
 import com.example.fooddelivery.domain.use_case.food.GetTestimonials
+import com.example.fooddelivery.domain.use_case.order.AddFoodToCart
 import com.example.fooddelivery.domain.use_case.order.GetOrders
+import com.example.fooddelivery.domain.use_case.order.GetSavedFoods
+import com.example.fooddelivery.domain.use_case.order.IncreaseFoodQuantity
 import com.example.fooddelivery.domain.use_case.order.OrderUseCases
+import com.example.fooddelivery.domain.use_case.order.RemoveFoodFromCart
 import com.example.fooddelivery.domain.use_case.restaurant.GetRestaurants
 import com.example.fooddelivery.domain.use_case.restaurant.RestaurantUseCases
 import dagger.Module
@@ -36,6 +43,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+
+    @Provides
+    @Singleton
+    fun provideFoodDeliveryDatabase(app: Application):FoodDeliveryDatabase {
+        return Room.databaseBuilder(app,FoodDeliveryDatabase::class.java,
+            FoodDeliveryDatabase.DATABASE_NAME).build()
+    }
+
+
 
     @Provides
     @Singleton
@@ -91,8 +108,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOrderRepository(dataSource: OrderDataSource): OrderRepository {
-        return OrderRepositoryImpl(dataSource)
+    fun provideOrderRepository(dataSource: OrderDataSource,db: FoodDeliveryDatabase): OrderRepository {
+        return OrderRepositoryImpl(dataSource,db.foodsDao)
     }
 
 
@@ -117,7 +134,12 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOrderUseCases(repository: OrderRepository): OrderUseCases {
-        return OrderUseCases(getOrders = GetOrders(repository))
+        return OrderUseCases(getOrders = GetOrders(repository),
+            addFoodToCart = AddFoodToCart(repository),
+            getSavedFoods = GetSavedFoods(repository),
+            removeFoodFromCart = RemoveFoodFromCart(repository),
+            increaseFoodQuantity = IncreaseFoodQuantity(repository)
+        )
     }
 
 

@@ -3,6 +3,7 @@ package com.example.fooddelivery.presentation.house.components
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,13 +40,15 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.fooddelivery.R
 import com.example.fooddelivery.common.Endpoints
+import com.example.fooddelivery.common.extensions.toPriceString
 import com.example.fooddelivery.domain.model.Food
 import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 
 @Composable
 fun FoodItemView(
-    food: Food? = null
+    food: Food? = null,
+    onClick: () -> Unit = {}
 ) {
     Box(modifier = Modifier.height(320.dp)) {
         Card(modifier = Modifier
@@ -57,6 +61,7 @@ fun FoodItemView(
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 20.dp
             )
+
 
 
         ) {
@@ -109,7 +114,7 @@ fun FoodItemView(
                      Spacer(modifier = Modifier.width(2.dp))
 
                      Text(
-                         text = "${food?.price}",
+                         text = "${food?.price?.toPriceString()}",
                          style = TextStyle(
                              fontSize = 16.sp,
                              fontFamily = Satoshi,
@@ -129,7 +134,9 @@ fun FoodItemView(
                  Box(modifier = Modifier
                      .fillMaxWidth()
                      .height(48.dp)
-                     .background(PrimaryColor)) {
+                     .background(PrimaryColor).clickable {
+                         onClick()
+                     }) {
                     Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically) {
                         Icon(painter = painterResource(id = R.drawable.shopping_basket_add), contentDescription = "",
