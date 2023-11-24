@@ -4,5 +4,6 @@ data class FoodUseCases(
     val getFoods: GetFoods,
     val getFavoriteFoods: GetFavoriteFoods,
     val getFoodsPerRestaurant: GetFoodsPerRestaurant,
-    val getTestimonials: GetTestimonials
+    val getTestimonials: GetTestimonials,
+    val getPopularFoods: GetPopularFoods
 )

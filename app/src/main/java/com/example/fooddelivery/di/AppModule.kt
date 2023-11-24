@@ -20,6 +20,7 @@ import com.example.fooddelivery.domain.use_case.food.FoodUseCases
 import com.example.fooddelivery.domain.use_case.food.GetFavoriteFoods
 import com.example.fooddelivery.domain.use_case.food.GetFoods
 import com.example.fooddelivery.domain.use_case.food.GetFoodsPerRestaurant
+import com.example.fooddelivery.domain.use_case.food.GetPopularFoods
 import com.example.fooddelivery.domain.use_case.food.GetTestimonials
 import com.example.fooddelivery.domain.use_case.order.AddFoodToCart
 import com.example.fooddelivery.domain.use_case.order.AddOrder
@@ -120,7 +121,8 @@ object AppModule {
         return FoodUseCases(getFoods = GetFoods(repository),
             getFavoriteFoods = GetFavoriteFoods(repository),
             getFoodsPerRestaurant = GetFoodsPerRestaurant(repository),
-            getTestimonials = GetTestimonials(repository)
+            getTestimonials = GetTestimonials(repository),
+            getPopularFoods = GetPopularFoods(repository)
         )
     }
 

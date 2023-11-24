@@ -75,7 +75,7 @@ fun HomeView() {
                 bottomBarState.value = false
             }
 
-            PopularMenu.route -> {
+            PopularMenu.route+"?restaurantId={restaurantId}" -> {
                 bottomBarState.value = false
             }
 

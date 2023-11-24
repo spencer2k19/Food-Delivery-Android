@@ -11,6 +11,7 @@ interface FoodRepository {
     suspend fun fetchRestaurants(): List<Restaurant>
 
     suspend fun fetchFavoriteFoods(): List<Food>
+    suspend fun fetchPopularFoods(restaurantId: Int): List<Food>
 
     suspend fun fetchFoodsPerRestaurant(restaurantId: Int): List<Food>
 

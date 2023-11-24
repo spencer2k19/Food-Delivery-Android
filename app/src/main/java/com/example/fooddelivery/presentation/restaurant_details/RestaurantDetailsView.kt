@@ -232,7 +232,7 @@ fun RestaurantDetailsView(
                            Spacer(modifier = Modifier.weight(1f))
 
                            TextButton(onClick = {
-                               navController?.navigate(PopularMenu.route)
+                               navController?.navigate(PopularMenu.route+"?restaurantId=${restaurant?.id}")
                            }) {
                                Text(
                                    text = "See all",

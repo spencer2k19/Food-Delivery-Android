@@ -87,7 +87,12 @@ fun HomeNavHost(
            TestimonialsView(navController)
         }
 
-        composable(PopularMenu.route) {
+        composable(PopularMenu.route+"?restaurantId={restaurantId}", arguments = listOf(
+            navArgument("restaurantId") {
+                type = NavType.IntType
+                nullable = false
+            }
+        )) {
             PopularMenuView(navController)
         }
 

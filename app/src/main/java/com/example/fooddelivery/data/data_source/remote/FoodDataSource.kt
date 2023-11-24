@@ -32,6 +32,13 @@ class FoodDataSource @Inject constructor(
         }
     }
 
+
+    suspend fun fetchPopularFoods(restaurantId: Int): ResponseFoods {
+        return safeApiCall {
+            apiService.fetchPopularFoods(restaurantId)
+        }
+    }
+
     suspend fun fetchRestaurants(): ResponseRestaurants {
         return safeApiCall {
             apiService.fetchRestaurants()

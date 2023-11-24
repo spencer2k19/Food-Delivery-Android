@@ -70,7 +70,7 @@ fun FoodItemView(
                  .fillMaxWidth()
                  .padding(top = 140.dp),
                  horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Cheese Burger",
+                Text(text = "${food?.name}",
                     fontSize = 14.sp, fontFamily = Satoshi,
                     fontWeight = FontWeight.W700,
                     textAlign = TextAlign.Center,
@@ -78,7 +78,7 @@ fun FoodItemView(
                 Spacer(modifier = Modifier.height(5.dp))
                  Row {
                      Text(
-                         text = "Cheesy Heaven",
+                         text = "${food?.shortDescription}",
                          style = TextStyle(
                              fontSize = 12.sp,
                              fontFamily = Satoshi),

@@ -27,6 +27,10 @@ class FoodRepositoryImpl @Inject constructor(
         return dataSource.fetchFavoriteFoods().data
     }
 
+    override suspend fun fetchPopularFoods(restaurantId: Int): List<Food> {
+        return dataSource.fetchPopularFoods(restaurantId).data
+    }
+
     override suspend fun fetchFoodsPerRestaurant(restaurantId: Int): List<Food> {
         return dataSource.fetchFoodsPerRestaurant(restaurantId).data
     }
