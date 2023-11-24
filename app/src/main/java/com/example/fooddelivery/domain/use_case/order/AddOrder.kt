@@ -17,6 +17,7 @@ class AddOrder @Inject constructor(
             try {
                 emit(Resource.Loading())
                 repository.addOrder(data)
+                repository.deleteCachedFoods()
                 emit(Resource.Success(Unit))
             }catch (e: Exception) {
                 emit(Resource.Error(e.message ?: ""))

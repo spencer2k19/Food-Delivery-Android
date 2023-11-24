@@ -46,8 +46,18 @@ fun OrderItemView(
     order: Order? = null,
     onClick: () -> Unit = {}
 ) {
-   val image = order?.foods?.first()?.foodsId?.restaurant?.logo
-    val restaurantName = order?.foods?.first()?.foodsId?.restaurant?.name
+   val image = if((order?.foods.isNullOrEmpty())) {
+        ""
+   } else {
+       order?.foods?.first()?.foodsId?.restaurant?.logo
+   }
+
+
+    val restaurantName = if((order?.foods.isNullOrEmpty())) {
+        ""
+    } else {
+        order?.foods?.first()?.foodsId?.restaurant?.name
+    }
 
     val statusColor:Color = if(order?.orderStatus?.lowercase() == "process") {
          GreenColor

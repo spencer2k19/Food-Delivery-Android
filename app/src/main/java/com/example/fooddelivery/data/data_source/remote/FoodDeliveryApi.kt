@@ -61,7 +61,8 @@ interface FoodDeliveryApi {
 
 
     @POST(Endpoints.ORDERS_URL)
-    suspend fun addOrder(@Body data: OrderDto): Unit
+    suspend fun addOrder(@Body data: OrderDto,
+                         @Header("Authorization") authorization: String = Utils.bearerToken()): Unit
 
 
 

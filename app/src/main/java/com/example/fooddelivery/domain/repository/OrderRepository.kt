@@ -19,5 +19,7 @@ interface OrderRepository {
 
     suspend fun addOrder(data: OrderDto)
 
+    suspend fun deleteCachedFoods()
+
 
 }

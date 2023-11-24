@@ -1,5 +1,6 @@
 package com.example.fooddelivery.presentation.cart
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,15 +16,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,8 +51,12 @@ import com.example.fooddelivery.R
 import com.example.fooddelivery.common.extensions.toPriceString
 import com.example.fooddelivery.presentation.components.BackButton
 import com.example.fooddelivery.presentation.components.CustomFilledButton
+import com.example.fooddelivery.presentation.home.HomeActivity
+import com.example.fooddelivery.presentation.login.LoginViewModel
+import com.example.fooddelivery.presentation.ui.theme.PrimaryColor
 import com.example.fooddelivery.presentation.ui.theme.Satoshi
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,8 +66,34 @@ fun CartView(
 ) {
 
     val state = viewModel.state.value
+    var openDialog by remember{ mutableStateOf(false) }
+    var openSuccessfullyDialog by remember {
+        mutableStateOf(false)
+    }
+    val orderState = viewModel.orderState.value
+    val snackbarHostState = remember{
+        SnackbarHostState()
+    }
 
-    Scaffold(topBar = {
+
+
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest {event ->
+            when(event) {
+                is CartViewModel.UIOrderEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+                is CartViewModel.UIOrderEvent.ShowSuccessfullyDialog -> {
+                   //openSuccessfullyDialog = true
+                }
+            }
+        }
+    }
+
+    Scaffold(snackbarHost = {
+        SnackbarHost(snackbarHostState)
+    },topBar = {
         TopAppBar(title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 BackButton {
@@ -136,9 +172,84 @@ fun CartView(
 
                      Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                          CustomFilledButton(text = "Place my order", onClick = {
-
-                         })
+                             openDialog = true
+                         }, isLoading = orderState.isLoading)
                      }
+
+
+                     if(openDialog) {
+                         AlertDialog(onDismissRequest = {
+
+                         }, confirmButton = {
+                             TextButton(onClick = {
+                                 openDialog = false
+                                 viewModel.addOrder(comment,state.data)
+                             }) {
+                                 Text(text = "Yes",
+                                     fontSize = 14.sp,
+                                     fontFamily = Satoshi,
+                                     fontWeight = FontWeight.SemiBold,
+                                     color = PrimaryColor)
+                             }
+                         },
+                             title = {
+                                 Text(text = "Order", fontSize = 15.sp,
+                                     fontFamily = Satoshi,
+                                     fontWeight = FontWeight.SemiBold)
+                             },
+                             text = {
+                                 Text(text = "Confirm this order ? ",
+                                     fontSize = 14.sp,
+                                     fontFamily = Satoshi,
+                                     fontWeight = FontWeight.Normal)
+                             },
+                             dismissButton = {
+                                 TextButton(onClick = {
+                                     openDialog = false
+                                 }) {
+                                     Text(text = "No",
+                                         fontSize = 14.sp,
+                                         fontFamily = Satoshi,
+                                         fontWeight = FontWeight.SemiBold,
+                                         )
+                                 }
+                             }, containerColor = Color.White
+
+
+                             )
+                     }
+
+
+                     if(orderState.success.isNotEmpty()) {
+                         AlertDialog(onDismissRequest = {
+
+                         }, confirmButton = {
+                             TextButton(onClick = {
+                                 openDialog = false
+                                navController?.popBackStack()
+                             }) {
+                                 Text(text = "OK",
+                                     fontSize = 14.sp,
+                                     fontFamily = Satoshi,
+                                     fontWeight = FontWeight.SemiBold,
+                                     color = PrimaryColor)
+                             }
+                         },
+
+                             text = {
+                                 Text(text = orderState.success,
+                                     fontSize = 14.sp,
+                                     fontFamily = Satoshi,
+                                     fontWeight = FontWeight.Normal)
+                             },
+                            containerColor = Color.White
+
+
+                         )
+                     }
+
+
+
                  }
             }
 

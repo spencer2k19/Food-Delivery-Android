@@ -1,5 +1,6 @@
 package com.example.fooddelivery.presentation.cart
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -13,6 +14,8 @@ import com.example.fooddelivery.data.data_source.remote.dto.order.OrderDto
 import com.example.fooddelivery.domain.model.Food
 import com.example.fooddelivery.domain.use_case.order.OrderUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -28,6 +31,11 @@ class CartViewModel @Inject constructor(
 
     private var _orderState = mutableStateOf(OrderState())
     val orderState: State<OrderState> = _orderState
+
+    private var _eventFlow = MutableSharedFlow<UIOrderEvent>()
+    val eventFlow: SharedFlow<UIOrderEvent> = _eventFlow
+
+
 
     init {
         fetchSavedFoods()
@@ -75,10 +83,18 @@ class CartViewModel @Inject constructor(
 
                 is Resource.Success -> {
                     _orderState.value = OrderState(success = "Order is created successfully")
+                    _eventFlow.emit(UIOrderEvent.ShowSuccessfullyDialog(message = "Order is created successfully"))
+
+
+                    Log.e("food_delivery","Order successfully created")
                 }
 
                 is Resource.Error -> {
                     _orderState.value = OrderState(error = result.message ?: "")
+                    _eventFlow.emit(UIOrderEvent.ShowSnackbar(result.message ?: ""))
+                    Log.e("food_delivery","An error occured while creating order: ${result.message}")
+
+
                 }
             }
         }.launchIn(viewModelScope)
@@ -97,4 +113,10 @@ class CartViewModel @Inject constructor(
         var success: String = "",
         var error: String = ""
     )
+
+
+    sealed class UIOrderEvent {
+        data class ShowSnackbar(val message: String): UIOrderEvent()
+        data class  ShowSuccessfullyDialog(val message: String): UIOrderEvent()
+    }
 }

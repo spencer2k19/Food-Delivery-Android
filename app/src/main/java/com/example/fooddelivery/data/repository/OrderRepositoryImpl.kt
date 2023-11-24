@@ -40,4 +40,8 @@ class OrderRepositoryImpl @Inject constructor(
     override suspend fun addOrder(data: OrderDto) {
         dataSource.addOrder(order = data)
     }
+
+    override suspend fun deleteCachedFoods() {
+        dao.deleteFoods()
+    }
 }
